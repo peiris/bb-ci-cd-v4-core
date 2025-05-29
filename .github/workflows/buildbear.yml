@@ -65,6 +65,15 @@ jobs:
       - name: Run BB Action Test
         run: forge test
 
+      - name: test_ci
+        uses: BuildBearLabs/buildbear_x_action@feat/modify-payload-with-new-api
+        with:
+          network: |
+            [
+              {
+                "chainId": 1
+              }
+            ]
+          buildbear-token: "e174537b-be0c-4922-9ba0-729e694e4521"
         env:
           API_KEY: "e174537b-be0c-4922-9ba0-729e694e4521"
-          FOUNDRY_FUZZ_SEED: "0x4444"
