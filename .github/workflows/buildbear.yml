@@ -1,0 +1,70 @@
+name: Test  Action
+
+on: [push]
+
+env:
+  BUILDBEAR_BASE_URL: "https://api.test.buildbear.io"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      # Cache Foundry repository
+      - name: Cache Foundry repository
+        uses: actions/cache@v3
+        with:
+          path: foundry
+          key: ${{ runner.os }}-foundry-${{ hashFiles('**/foundry/.gitmodules') }}
+          restore-keys: |
+            ${{ runner.os }}-foundry-
+
+      # Cache build artifacts
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        with:
+          path: $HOME/.config/.foundry/bin
+          key: ${{ runner.os }}-forge-${{ hashFiles('foundry/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-forge-
+
+      - name: Clone Foundry repository
+        run: |
+          if [ ! -d "foundry" ]; then
+            git clone https://github.com/BuildBearLabs/foundry.git
+          fi
+        shell: bash
+
+      - name: Build Foundry from source
+        run: |
+          cd foundry
+          cargo build
+          mkdir -p $HOME/.config/.foundry/bin
+          cp target/debug/forge $HOME/.config/.foundry/bin/
+          echo "PATH=$HOME/.config/.foundry/bin:$PATH" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Show Forge version
+        run: forge --version
+
+      - name: Make bbOut dir
+        run: mkdir bbOut
+        shell: bash
+
+      - name: Run BB Action Test
+        run: forge test
+
+        env:
+          API_KEY: "f7445988-62c1-4c04-94b0-4bab8efd8417"
+          FOUNDRY_FUZZ_SEED: "0x4444"
