@@ -86,7 +86,8 @@ contract Deployers is Script {
 
     function run() external {
         vm.startBroadcast();
-        initializeManagerRoutersAndPoolsWithLiq(IHooks(address(0)));
+        // initializeManagerRoutersAndPoolsWithLiq(IHooks(address(0)));
+        deployFreshManagerAndRouters();
         vm.stopBroadcast();
     }
 
@@ -104,10 +105,7 @@ contract Deployers is Script {
         takeRouter = new PoolTakeTest(manager);
         claimsRouter = new PoolClaimsTest(manager);
         nestedActionRouter = new PoolNestedActionsTest(manager);
-        feeController = makeAddr("feeController");
         actionsRouter = new ActionsRouter(manager);
-
-        manager.setProtocolFeeController(feeController);
     }
 
     // You must have first initialised the routers with deployFreshManagerAndRouters
