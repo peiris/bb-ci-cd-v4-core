@@ -66,5 +66,5 @@ jobs:
         run: forge test
 
         env:
-          API_KEY: "f7445988-62c1-4c04-94b0-4bab8efd8417"
+          API_KEY: "e174537b-be0c-4922-9ba0-729e694e4521"
           FOUNDRY_FUZZ_SEED: "0x4444"
