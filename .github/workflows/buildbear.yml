@@ -63,7 +63,7 @@ jobs:
         shell: bash
 
       - name: Run BB Action Test
-        run: forge test --vvvv
+        run: forge test -vvv
 
       - name: test_ci
         uses: BuildBearLabs/buildbear_x_action@feat/modify-payload-with-new-api
