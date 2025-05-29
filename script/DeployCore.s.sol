@@ -88,8 +88,6 @@ contract Deployers is Script {
         vm.startBroadcast();
         // initializeManagerRoutersAndPoolsWithLiq(IHooks(address(0)));
         deployFreshManagerAndRouters();
-        manager = new PoolManager(address(msg.sender));
-
         vm.stopBroadcast();
     }
 
